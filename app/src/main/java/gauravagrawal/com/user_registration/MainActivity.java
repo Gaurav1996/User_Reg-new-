@@ -4,32 +4,25 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText editTextName;
-    private EditText editTextUsername;
-    private EditText editTextPassword;
-    private EditText editTextEmail;
-
+    private EditText editTextuuid;
+    private EditText editTextaddress;
+    private EditText editTextcarmodel;
     private Button buttonRegister;
 
-    private static final String REGISTER_URL = "http://www.arrowflash.esy.es/register.php";
+    private static final String REGISTER_URL = "http://www.automatic-report.herokuapp.com/db/new";
 
 
     @Override
@@ -38,9 +31,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         editTextName = (EditText) findViewById(R.id.name);
-        editTextUsername = (EditText) findViewById(R.id.username);
-        editTextPassword = (EditText) findViewById(R.id.password);
-        editTextEmail = (EditText) findViewById(R.id.email);
+        editTextuuid = (EditText) findViewById(R.id.uuid);
+        editTextaddress = (EditText) findViewById(R.id.address);
+        editTextcarmodel = (EditText) findViewById(R.id.carmodel);
 
         buttonRegister = (Button) findViewById(R.id.regbutton);
 
@@ -56,14 +49,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void registerUser() {
         String name = editTextName.getText().toString().trim().toLowerCase();
-        String username = editTextUsername.getText().toString().trim().toLowerCase();
-        String password = editTextPassword.getText().toString().trim().toLowerCase();
-        String email = editTextEmail.getText().toString().trim().toLowerCase();
+        String uuid = editTextuuid.getText().toString().trim().toLowerCase();
+        String address = editTextaddress.getText().toString().trim().toLowerCase();
+        String carmodel = editTextcarmodel.getText().toString().trim().toLowerCase();
 
-        register(name,username,password,email);
+        register(name,uuid,address,carmodel);
     }
 
-    private void register(String name, String username, String password, String email) {
+    private void register(final String name, final String uuid, final String address, final String carmodel) {
         class RegisterUser extends AsyncTask<String, Void, String>{
             ProgressDialog loading;
             RegisterUserClass ruc = new RegisterUserClass();
@@ -85,19 +78,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             protected String doInBackground(String... params) {
 
-                HashMap<String, String> data = new HashMap<String,String>();
-                data.put("name",params[0]);
+                //String json="";
+                //HashMap<String, String> data = new HashMap<String,String>();
+                /*data.put("name",params[0]);
                 data.put("username",params[1]);
                 data.put("password",params[2]);
-                data.put("email",params[3]);
-
-                String result = ruc.sendPostRequest(REGISTER_URL,data);
+                data.put("email",params[3]);*/
+                JSONObject jsonObject=new JSONObject();
+                try {
+                    jsonObject.accumulate("name", name);
+                    jsonObject.accumulate("uuid",uuid);
+                    jsonObject.accumulate("address",address);
+                    jsonObject.accumulate("carmodel",carmodel);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                String result = ruc.sendPostRequest(REGISTER_URL,jsonObject);
                 //Toast.makeText(getApplicationContext(),result, Toast.LENGTH_SHORT).show();
                 return  result;
             }
         }
 
         RegisterUser ru = new RegisterUser();
-        ru.execute(name,username,password,email);
+        ru.execute(name,uuid,address,carmodel);
     }
 }

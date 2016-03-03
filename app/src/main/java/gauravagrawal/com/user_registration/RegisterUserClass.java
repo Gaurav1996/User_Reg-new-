@@ -1,6 +1,8 @@
 package gauravagrawal.com.user_registration;
 import android.widget.Toast;
 
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
@@ -16,8 +18,7 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 public class RegisterUserClass {
 
-    public String sendPostRequest(String requestURL,
-                                  HashMap<String, String> postDataParams) {
+    public String sendPostRequest(String requestURL,JSONObject postDataParams) {
 
         URL url;
         String response = "";
@@ -33,16 +34,16 @@ public class RegisterUserClass {
             OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(os, "UTF-8"));
-            writer.write(getPostDataString(postDataParams));
+            writer.write(postDataParams.toString());
 
             writer.flush();
             writer.close();
             os.close();
             int responseCode=conn.getResponseCode();
 
-            if (responseCode == HttpsURLConnection.HTTP_OK) {
-                BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                response = br.readLine();
+            if (responseCode == 201) {
+                //BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                response ="Successfully registered";
             }
             else {
                 response="Error Registering";
