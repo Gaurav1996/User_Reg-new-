@@ -22,6 +22,7 @@ public class RegisterUserClass {
 
         URL url;
         String response = "";
+        //int k=0;
         try {
             url = new URL(requestURL);
 
@@ -35,23 +36,22 @@ public class RegisterUserClass {
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(os, "UTF-8"));
             writer.write(postDataParams.toString());
-
             writer.flush();
             writer.close();
             os.close();
             int responseCode=conn.getResponseCode();
-
-            if (responseCode == 201) {
+            if (responseCode == 201||responseCode==503) {
                 //BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 response ="Successfully registered";
+                //k=responseCode;
             }
             else {
                 response="Error Registering";
+                //k=responseCode;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return response;
     }
 

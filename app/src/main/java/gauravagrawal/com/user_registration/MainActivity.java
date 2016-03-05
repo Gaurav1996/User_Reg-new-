@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText editTextcarmodel;
     private Button buttonRegister;
 
-    private static final String REGISTER_URL = "http://www.automatic-report.herokuapp.com/db/new";
+    private static final String REGISTER_URL = "http://automatic-report.herokuapp.com/db/new";
 
 
     @Override
@@ -86,16 +86,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 data.put("email",params[3]);*/
                 JSONObject jsonObject=new JSONObject();
                 try {
-                    jsonObject.accumulate("name", name);
-                    jsonObject.accumulate("uuid",uuid);
-                    jsonObject.accumulate("address",address);
-                    jsonObject.accumulate("carmodel",carmodel);
+                    jsonObject.put("name", name);
+                    jsonObject.put("uuid", uuid);
+                    jsonObject.put("address", address);
+                    jsonObject.put("car", carmodel);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 String result = ruc.sendPostRequest(REGISTER_URL,jsonObject);
                 //Toast.makeText(getApplicationContext(),result, Toast.LENGTH_SHORT).show();
-                return  result;
+                //int result=ruc.sendPostRequest(REGISTER_URL,jsonObject);
+                //return  Integer.toString(result);
+                return result;
             }
         }
 
