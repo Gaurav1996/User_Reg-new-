@@ -1,6 +1,7 @@
 package gauravagrawal.com.user_registration;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -72,7 +73,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 loading.dismiss();
-                Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+                if (s.equalsIgnoreCase("Successfully registered")) {
+                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+                    Intent intent=new Intent(MainActivity.this,after_reg.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else
+                    Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
             }
 
             @Override
