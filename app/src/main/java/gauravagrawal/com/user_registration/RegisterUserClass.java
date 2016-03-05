@@ -18,11 +18,10 @@ import java.util.Map;
 import javax.net.ssl.HttpsURLConnection;
 public class RegisterUserClass {
 
-    public String sendPostRequest(String requestURL,JSONObject postDataParams) {
+    public String sendPostRequest(String requestURL, JSONObject postDataParams) {
 
         URL url;
         String response = "";
-        //int k=0;
         try {
             url = new URL(requestURL);
 
@@ -32,6 +31,7 @@ public class RegisterUserClass {
             conn.setRequestMethod("POST");
             conn.setDoInput(true);
             conn.setDoOutput(true);
+            conn.setRequestProperty("Content-Type", "application/json");
             OutputStream os = conn.getOutputStream();
             BufferedWriter writer = new BufferedWriter(
                     new OutputStreamWriter(os, "UTF-8"));
@@ -39,36 +39,15 @@ public class RegisterUserClass {
             writer.flush();
             writer.close();
             os.close();
-            int responseCode=conn.getResponseCode();
-            if (responseCode == 201||responseCode==503) {
-                //BufferedReader br=new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                response ="Successfully registered";
-                //k=responseCode;
-            }
-            else {
-                response="Error Registering";
-                //k=responseCode;
+            int responseCode = conn.getResponseCode();
+            if (responseCode == 201) {
+                response = "Successfully registered";
+            } else {
+                response = "Error Registering";
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return response;
-    }
-
-    private String getPostDataString(HashMap<String, String> params) throws UnsupportedEncodingException {
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
-        for(Map.Entry<String, String> entry : params.entrySet()){
-            if (first)
-                first = false;
-            else
-                result.append("&");
-
-            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
-            result.append("=");
-            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
-        }
-
-        return result.toString();
     }
 }

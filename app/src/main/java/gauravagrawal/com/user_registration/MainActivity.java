@@ -12,9 +12,6 @@ import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
-
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText editTextName;
@@ -53,10 +50,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String uuid = editTextuuid.getText().toString().trim().toLowerCase();
         String address = editTextaddress.getText().toString().trim().toLowerCase();
         String carmodel = editTextcarmodel.getText().toString().trim().toLowerCase();
-
         register(name,uuid,address,carmodel);
     }
-
     private void register(final String name, final String uuid, final String address, final String carmodel) {
         class RegisterUser extends AsyncTask<String, Void, String>{
             ProgressDialog loading;
@@ -65,14 +60,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             protected void onPreExecute() {
-                super.onPreExecute();
-                loading = ProgressDialog.show(MainActivity.this, "Please Wait",null, true, true);
-            }
+                    super.onPreExecute();
+                    loading = ProgressDialog.show(MainActivity.this, "Please Wait", null, true, true);
+                }
 
             @Override
             protected void onPostExecute(String s) {
                 super.onPostExecute(s);
                 loading.dismiss();
+                /*Going to second activity if successfully registered*/
                 if (s.equalsIgnoreCase("Successfully registered")) {
                     Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
                     Intent intent=new Intent(MainActivity.this,after_reg.class);
@@ -86,12 +82,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             protected String doInBackground(String... params) {
 
-                //String json="";
-                //HashMap<String, String> data = new HashMap<String,String>();
-                /*data.put("name",params[0]);
-                data.put("username",params[1]);
-                data.put("password",params[2]);
-                data.put("email",params[3]);*/
                 JSONObject jsonObject=new JSONObject();
                 try {
                     jsonObject.put("name", name);
@@ -102,9 +92,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
                 String result = ruc.sendPostRequest(REGISTER_URL,jsonObject);
-                //Toast.makeText(getApplicationContext(),result, Toast.LENGTH_SHORT).show();
-                //int result=ruc.sendPostRequest(REGISTER_URL,jsonObject);
-                //return  Integer.toString(result);
                 return result;
             }
         }
