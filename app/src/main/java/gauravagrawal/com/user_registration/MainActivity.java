@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText editTextcarmodel;
     private Button buttonRegister;
 
-    private static final String REGISTER_URL = "http://192.168.137.1:3000/db/new";
+    private static final String REGISTER_URL = "http://automatic-report.herokuapp.com/db/new"; //http://192.168.137.1:3000/db/new";
 
     private static final String PREFS = "AVAR";
 
@@ -90,7 +90,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            loading = ProgressDialog.show(MainActivity.this, "Please Wait", null, true, true);
+            loading = ProgressDialog.show(MainActivity.this, "Please Wait...", null, true, true);
+            /*loading=new ProgressDialog(MainActivity.this);
+            loading.setTitle("Please Wait..");
+            loading.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            loading.setIndeterminate(true);
+            loading.show();*/
         }
 
         @Override

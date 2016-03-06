@@ -21,7 +21,7 @@ public class after_reg extends AppCompatActivity {
     Switch myswitch;
     Intent intent2;
 
-    private static final String MY_URL = "http://192.168.137.1:3000/db/new";
+    private static final String MY_URL = "http://automatic-report.herokuapp.com/db/new";//http://192.168.137.1:3000/db/new";
 
     private static final String PREFS = "AVAR";
 
@@ -45,7 +45,7 @@ public class after_reg extends AppCompatActivity {
     void alertdialog(){
         AlertDialog.Builder alertbox=new AlertDialog.Builder(after_reg.this);
         alertbox.setTitle("Confirm False Alarm");
-        alertbox.setMessage("Are you sure this is a false alarm");
+        alertbox.setMessage("Are you sure this is a false alarm?");
         alertbox.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
