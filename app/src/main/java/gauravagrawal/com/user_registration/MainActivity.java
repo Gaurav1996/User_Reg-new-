@@ -2,6 +2,7 @@ package gauravagrawal.com.user_registration;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,13 +21,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText editTextcarmodel;
     private Button buttonRegister;
 
-    private static final String REGISTER_URL = "http://automatic-report.herokuapp.com/db/new";
+    private static final String REGISTER_URL = "http://192.168.137.1:3000/db/new";
 
+    private static final String PREFS = "AVAR";
 
-    @Override
+    private SharedPreferences prefs;
+    private SharedPreferences.Editor editor;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        prefs = getSharedPreferences(PREFS, MODE_PRIVATE);
+        editor = prefs.edit();
+
+        boolean isRegistered = prefs.getBoolean("isRegistered", false);
+
+        if(isRegistered) {
+            Intent intent=new Intent(MainActivity.this,after_reg.class);
+            intent.putExtra("uuid", prefs.getString("uuid", null));
+            startActivity(intent);
+
+        }
 
         editTextName = (EditText) findViewById(R.id.name);
         editTextuuid = (EditText) findViewById(R.id.uuid);
@@ -53,50 +69,62 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         register(name,uuid,address,carmodel);
     }
     private void register(final String name, final String uuid, final String address, final String carmodel) {
-        class RegisterUser extends AsyncTask<String, Void, String>{
-            ProgressDialog loading;
-            RegisterUserClass ruc = new RegisterUserClass();
 
-
-            @Override
-            protected void onPreExecute() {
-                    super.onPreExecute();
-                    loading = ProgressDialog.show(MainActivity.this, "Please Wait", null, true, true);
-                }
-
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                loading.dismiss();
-                /*Going to second activity if successfully registered*/
-                if (s.equalsIgnoreCase("Successfully registered")) {
-                    Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
-                    Intent intent=new Intent(MainActivity.this,after_reg.class);
-                    startActivity(intent);
-                    finish();
-                }
-                else
-                    Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            protected String doInBackground(String... params) {
-
-                JSONObject jsonObject=new JSONObject();
-                try {
-                    jsonObject.put("name", name);
-                    jsonObject.put("uuid", uuid);
-                    jsonObject.put("address", address);
-                    jsonObject.put("car", carmodel);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                String result = ruc.sendPostRequest(REGISTER_URL,jsonObject);
-                return result;
-            }
-        }
-
-        RegisterUser ru = new RegisterUser();
+        RegisterUser ru = new RegisterUser(name, uuid, address, carmodel);
         ru.execute(name,uuid,address,carmodel);
     }
+
+    class RegisterUser extends AsyncTask<String, Void, String>{
+        ProgressDialog loading;
+        RegisterUserClass ruc = new RegisterUserClass();
+
+        String name, uuid, address, car;
+
+        public RegisterUser(String name, String uuid, String address, String car) {
+            this.name = name;
+            this.uuid = uuid;
+            this.address = address;
+            this.car = car;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading = ProgressDialog.show(MainActivity.this, "Please Wait", null, true, true);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            loading.dismiss();
+                /*Going to second activity if successfully registered*/
+            if (s.equalsIgnoreCase("Successfully registered")) {
+                Toast.makeText(getApplicationContext(), s, Toast.LENGTH_LONG).show();
+                editor.putString("uuid", uuid);
+                editor.putBoolean("isRegistered", true);
+                editor.commit();
+                startActivity(new Intent(MainActivity.this,after_reg.class));
+                finish();
+            }
+            else
+                Toast.makeText(getApplicationContext(),s,Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            JSONObject jsonObject=new JSONObject();
+            try {
+                jsonObject.put("name", name);
+                jsonObject.put("uuid", uuid);
+                jsonObject.put("address", address);
+                jsonObject.put("car", car);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            String result = ruc.sendPostRequest(REGISTER_URL,jsonObject);
+            return result;
+        }
+    }
+
 }

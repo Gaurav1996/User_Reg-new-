@@ -42,9 +42,10 @@ public class RegisterUserClass {
             int responseCode = conn.getResponseCode();
             if (responseCode == 201) {
                 response = "Successfully registered";
-            } else {
-                response = "Error Registering";
             }
+            else if(responseCode==204)
+                    response="Registered for False alarm";
+            else response = "Error Registering";
         } catch (Exception e) {
             e.printStackTrace();
         }
