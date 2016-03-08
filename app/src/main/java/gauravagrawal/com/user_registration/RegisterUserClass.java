@@ -1,21 +1,12 @@
 package gauravagrawal.com.user_registration;
-import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 public class RegisterUserClass {
 
     public String sendPostRequest(String requestURL, JSONObject postDataParams) {
@@ -40,12 +31,10 @@ public class RegisterUserClass {
             writer.close();
             os.close();
             int responseCode = conn.getResponseCode();
-            if (responseCode == 201) {
+            if (responseCode == 201)
                 response = "Successfully registered";
-            }
-            else if(responseCode==204)
-                    response="Registered for False alarm";
             else response = "Error Registering";
+
         } catch (Exception e) {
             e.printStackTrace();
         }
