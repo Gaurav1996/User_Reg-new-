@@ -30,7 +30,7 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
+        android:inputType="number"
         android:ems="10"
         android:id="@+id/uuid"
         android:layout_below="@+id/name"
@@ -66,6 +66,21 @@
         android:layout_alignEnd="@+id/address"
         android:hint="Car model    " />
     </android.support.design.widget.TextInputLayout>
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/ice"
+            android:layout_below="@+id/carmodel"
+            android:layout_alignParentStart="true"
+            android:layout_alignEnd="@+id/carmodel"
+            android:hint="ICE" />
+    </android.support.design.widget.TextInputLayout>
+
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
